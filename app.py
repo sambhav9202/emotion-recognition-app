@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 
 print("Loading model...")
-model = tf.keras.models.load_model('emotion_model.keras')
+model = tf.keras.models.load_model('emotion_model.keras', compile=False)
 emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 @app.route('/', methods=['GET'])
@@ -45,4 +45,3 @@ def health():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
-
