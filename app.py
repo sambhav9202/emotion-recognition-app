@@ -1,6 +1,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import tensorflow as tf
 import numpy as np
 from PIL import Image
@@ -14,7 +14,7 @@ emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({'status': 'online', 'model': 'Emotion Recognition', 'accuracy': '67.90%', 'usage': 'POST /predict with image file'})
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():

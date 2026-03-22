@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emotion Recognition</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 40px; background: #f0f2f5; }
+        h1 { color: #333; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input[type=file] { margin: 20px 0; }
+        button { background: #4CAF50; color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        #result { margin-top: 20px; font-size: 24px; font-weight: bold; color: #333; }
+        #preview { max-width: 300px; margin: 15px auto; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>😊 Emotion Recognition</h1>
+        <p>Upload a face photo to detect emotion</p>
+        <input type="file" id="imageInput" accept="image/*"><br>
+        <img id="preview" style="display:none">
+        <br>
+        <button onclick="detect()">Detect Emotion</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('imageInput').onchange = function(e) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.getElementById('preview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+        function detect() {
+            var file = document.getElementById('imageInput').files[0];
+            if (!file) { alert('Please select an image!'); return; }
+            document.getElementById('result').innerHTML = '⏳ Detecting...';
+            var formData = new FormData();
+            formData.append('image', file);
+            fetch('/predict', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                if (data.emotion) {
+                    document.getElementById('result').innerHTML = '🎭 Emotion: <span style="color:#4CAF50">' + data.emotion + '</span><br>💯 Confidence: ' + data.confidence;
+                } else {
+                    document.getElementById('result').innerHTML = '❌ Error: ' + data.error;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
