@@ -1,24 +1,20 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from flask import Flask, request, jsonify
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 import io
-import os
 
 app = Flask(__name__)
 
 print("Loading model...")
-model = tf.keras.models.load_model('emotion_model.keras', compile=False)
+model = tf.keras.models.load_model('emotion_model.h5', compile=False)
 emotions = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({
-        'status': 'online',
-        'model': 'Emotion Recognition',
-        'accuracy': '67.90%',
-        'usage': 'POST /predict with image file'
-    })
+    return jsonify({'status': 'online', 'model': 'Emotion Recognition', 'accuracy': '67.90%', 'usage': 'POST /predict with image file'})
 
 @app.route('/predict', methods=['POST'])
 def predict():
